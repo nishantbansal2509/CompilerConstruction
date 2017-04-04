@@ -23,7 +23,6 @@ void calculateFirst(char * filename){
 	}
 	int cnt1 = 0;
 	int cnt2 = 100;
-	int q = 0;
 	while(cnt1 != cnt2)
 	{
 		cnt2 = cnt1;
@@ -105,7 +104,6 @@ void calculateFirst(char * filename){
 				firstArray[LHS-101][0] = 1;
 			}
 		}
-		q++;
 	}
 	FILE * fp = fopen(filename,"w");
 	int j;
@@ -134,19 +132,13 @@ void calculatefollow(char * filename){
 	}
 	int cnt1 = 0;
 	int cnt2 = 100;
-	int q = 0;
 	followArray[38][57] = 1;
 	//include $ in 'program' follow
-	// while(cnt1 != cnt2)
-	for(q=0;q<100;q++)
+	while(cnt1 != cnt2)
 	{
-		// cnt2--;
-		// printf("%d\n", cnt1);
 		cnt2 = cnt1;
 		int i = 0;
 		for(i=0;i<94;i++){
-			// printf("%s\n", grammar[i]);////////////////////////////////////////
-
 			char tempbuffer[90];
 			memset(tempbuffer, 90, '\0');
 			strcpy(tempbuffer,grammar[i]);
@@ -157,7 +149,6 @@ void calculatefollow(char * filename){
 			int n = 0;
 			pch = strtok(NULL," ");
 			while(pch != NULL){
-				// printf("%s %d\n", pch, getTokenId("ID"));
 				RHS[n] = getTokenId(pch);
 				pch = strtok(NULL," ");
 				n++;
@@ -175,6 +166,10 @@ void calculatefollow(char * filename){
 					for(k;k<n;k++){
 						if (RHS[k] < 100 && RHS[k] > 0)
 						{
+							if (followArray[RHS[j]-101][RHS[k]] != 1)
+							{
+								cnt1++;
+							}
 							followArray[RHS[j]-101][RHS[k]] = 1;
 							break;
 						}
@@ -184,9 +179,12 @@ void calculatefollow(char * filename){
 							for(r=1;r<57;r++){
 								if (followArray[RHS[j]-101][r] != 1)
 								{
+									if (firstArray[RHS[k]-101][r] == 1)
+									{
+										cnt1++;
+									}
 									followArray[RHS[j]-101][r] = firstArray[RHS[k]-101][r];
 								}
-								// followarr[RHS[j]-101].array[r] = firstArray[RHS[k]-101][r];
 							}
 							if ( firstArray[RHS[k]-101][0] == 1 )
 							{
@@ -205,9 +203,12 @@ void calculatefollow(char * filename){
 						for(w=0;w<58;w++){
 							if (followArray[RHS[j]-101][w] != 1)
 							{
+								if (followArray[LHS-101][w] == 1)
+								{
+									cnt1++;
+								}
 								followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 							}
-							// followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 						}
 					}
 				}
@@ -222,16 +223,15 @@ void calculatefollow(char * filename){
 				for(w=0;w<58;w++){
 					if (followArray[RHS[j]-101][w] != 1)
 					{
+						if (followArray[LHS-101][w] == 1)
+						{
+							cnt1++;
+						}
 						followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 					}
-					// followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 				}
 			}
-			// printf("iteration num %d rule num %d %s \n", q, i, grammar[i]);
-			// printf("%s %d\n", idtotkstr(LHS),n);
-			
 		}
-		q++;
 	}
 	FILE * fp1 = fopen(filename,"w");
 	int j= 0;
