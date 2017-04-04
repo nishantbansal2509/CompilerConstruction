@@ -16,6 +16,7 @@ struct first
 };
 
 struct first firstarr[51];
+int firstArray[51][57];
 
 struct follow{
 	int array[58];
@@ -28,18 +29,15 @@ void calculateFirst(char * filename){
 	for(p=0;p<51;p++){
 		int j = 0;
 		for(j=0;j<57;j++){
-			firstarr[p].array[j] = -1;
+			firstArray[p][j] = -1;
 		}
 	}
-	// int cnt1 = 0;
-	// int cnt2 = 100;
+	int cnt1 = 0;
+	int cnt2 = 100;
 	int q = 0;
-	// while(cnt1 != cnt2)
-	for(q=0;q<100;q++)
+	while(cnt1 != cnt2)
 	{
-		// cnt2--;
-		// printf("%d\n", cnt1);
-		// cnt2 = cnt1;
+		cnt2 = cnt1;
 		int i = 0;
 		for(i=0;i<94;i++){
 			char tempbuffer[90];
@@ -52,43 +50,34 @@ void calculateFirst(char * filename){
 			int n = 0;
 			pch = strtok(NULL," ");
 			while(pch != NULL){
-				// printf("%s %d\n", pch, getTokenId("ID"));
 				RHS[n] = getTokenId(pch);
 				pch = strtok(NULL," ");
 				n++;
 			}
-			// printf("iteration num %d rule num %d %s \n", q, i, grammar[i]);
-			// printf("%s %d\n", idtotkstr(LHS),n);
 			if (RHS[0] < 100 && RHS[0] > 0)
 			{
-				// printf(" yo\n");
-				if (firstarr[LHS-101].array[RHS[0]] != 1)
+				if (firstArray[LHS-101][RHS[0]] != 1)
 				{
 					cnt1++;
 				}
-				firstarr[LHS-101].array[RHS[0]] = 1;
+				firstArray[LHS-101][RHS[0]] = 1;
 				continue;
 			}
 			if (n == 1 && RHS[0] == 0)
 			{
-				// printf("yo %d %d\n",LHS-101,RHS[0]);///////////////////////
-				if (firstarr[LHS-101].array[RHS[0]] != 1)
+				if (firstArray[LHS-101][RHS[0]] != 1)
 				{
 					cnt1++;
 				}
-				firstarr[LHS-101].array[RHS[0]] = 1;
-				// printf("%d\n", firstarr[LHS-101].array[RHS[0]]);
+				firstArray[LHS-101][RHS[0]] = 1;
 				continue;
 			}
 			int k;
 			int flag = 1;
-			// int zupata = 0;
-			// printf("%d\n", RHS[0]);
 			for(k=0;k<n && flag == 1;k++){
 				if (RHS[k] > 100)
 				{
-					// printf("yo\n");
-					if (firstarr[RHS[k]-101].array[0] == 1)
+					if (firstArray[RHS[k]-101][0] == 1)
 					{
 						flag = 1;
 					}
@@ -98,38 +87,36 @@ void calculateFirst(char * filename){
 					}
 					int l = 1;
 					for(l=1;l<57;l++){
-						if (firstarr[RHS[k]-101].array[l] == 1)
+						if (firstArray[RHS[k]-101][l] == 1)
 						{
-							if (firstarr[LHS-101].array[l] != 1)
+							if (firstArray[LHS-101][l] != 1)
 							{
 								cnt1++;
 							}
-							firstarr[LHS-101].array[l] = 1;
-							// cnt1++;
+							firstArray[LHS-101][l] = 1;
 						}
 					}
 				}
 				else
 				{
-					if (firstarr[LHS-101].array[RHS[k]] != 1)
+					if (firstArray[LHS-101][RHS[k]] != 1)
 					{
 						cnt1++;
 					}
-					firstarr[LHS-101].array[RHS[k]] = 1;
-					// zupata = 1;
-					// cnt1++;
+					firstArray[LHS-101][RHS[k]] = 1;
 					break;
 				}
 			}
 			if (k == n && flag == 1)
 			{
-				if (firstarr[LHS-101].array[0] != 1)
+				if (firstArray[LHS-101][0] != 1)
 				{
 					cnt1++;
 				}
-				firstarr[LHS-101].array[0] = 1;
+				firstArray[LHS-101][0] = 1;
 			}
 		}
+		q++;
 	}
 	FILE * fp = fopen(filename,"w");
 	int j;
@@ -137,7 +124,7 @@ void calculateFirst(char * filename){
 		fprintf(fp,"%s ", idtotkstr(j+101));
 		int k = 0;
 		for(k=0;k<57;k++){
-			if (firstarr[j].array[k] == 1)
+			if (firstArray[j][k] == 1)
 			{
 				fprintf(fp,"%s ", idtotkstr(k));
 			}

@@ -2,6 +2,9 @@
 *.o
 
 # Executables
-*.exe
-*.out
+stage1exe
 
+#resourceFiles
+firstAutomated.txt
+followAutomated.txt
+cleanFile.txt
