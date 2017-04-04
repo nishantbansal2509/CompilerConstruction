@@ -1,0 +1,51 @@
+anyterm BO NUM RNUM ID 
+N1 EMPTY COMMA 
+N2 EMPTY COMMA 
+N3 EMPTY COMMA 
+N4 EMPTY PLUS MINUS 
+N5 EMPTY MUL DIV 
+N7 EMPTY AND OR 
+N8 EMPTY EQ NE LE LT GE GT 
+N9 EMPTY CASE 
+arithmeticExpr BO NUM RNUM ID 
+arithmeticOrBooleanExpr BO NUM RNUM ID 
+assignmentStmt ID 
+caseStmts CASE 
+conditionalStmt SWITCH 
+dataType INTEGER REAL BOOLEAN ARRAY 
+declareStmt DECLARE 
+default EMPTY DEFAULT 
+driverModule DRIVERDEF 
+expression MINUS BO NUM RNUM ID 
+factor BO NUM RNUM ID 
+idList ID 
+index NUM ID 
+input_plist ID 
+ioStmt GET_VALUE PRINT 
+iterativeStmt FOR WHILE 
+logicalOp AND OR 
+lvalueARRStmt SQBO 
+lvalueIDStmt ASSIGNOP 
+module DEF 
+moduleDeclaration DECLARE 
+moduleDeclarations EMPTY DECLARE 
+modueDef START 
+moduleReuseStmt SQBO USE 
+op1 PLUS MINUS 
+op2 MUL DIV 
+optional EMPTY SQBO 
+otherModules EMPTY DEF 
+output_plist ID 
+program DEF DECLARE DRIVERDEF 
+range NUM 
+relationalOp EQ NE LE LT GE GT 
+ret EMPTY RETURNS 
+simpleStmt SQBO USE ID 
+statement SQBO DECLARE GET_VALUE PRINT USE FOR SWITCH WHILE ID 
+statements EMPTY SQBO DECLARE GET_VALUE PRINT USE FOR SWITCH WHILE ID 
+term BO NUM RNUM ID 
+type INTEGER REAL BOOLEAN 
+value NUM TRUE FALSE 
+var NUM RNUM ID 
+whichId EMPTY SQBO 
+whichStmt SQBO ASSIGNOP 

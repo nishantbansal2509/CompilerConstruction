@@ -10,19 +10,8 @@ Subham Kumar	2014A7PS121P
 #include "parserDef.h"
 #include "utility.h"
 
-struct first
-{
-	int array[57];	
-};
-
-struct first firstarr[51];
 int firstArray[51][57];
-
-struct follow{
-	int array[58];
-};
-
-struct follow followarr[51];
+int followArray[51][58];
 
 void calculateFirst(char * filename){
 	int p = 0;
@@ -134,20 +123,20 @@ void calculateFirst(char * filename){
 	fclose(fp);
 }
 
+
 void calculatefollow(char * filename){
 	int i;
 	for(i=0;i<51;i++){
-		// followarr[i].flag = 0;
-		// followarr[i].counter = 0;
 		int j = 0;
 		for(j=0;j<58;j++){
-			followarr[i].array[j] = -1;
+			followArray[i][j] = -1;
 		}
 	}
 	int cnt1 = 0;
 	int cnt2 = 100;
 	int q = 0;
-	followarr[38].array[57] = 1;
+	followArray[38][57] = 1;
+	//include $ in 'program' follow
 	// while(cnt1 != cnt2)
 	for(q=0;q<100;q++)
 	{
@@ -186,20 +175,20 @@ void calculatefollow(char * filename){
 					for(k;k<n;k++){
 						if (RHS[k] < 100 && RHS[k] > 0)
 						{
-							followarr[RHS[j]-101].array[RHS[k]] = 1;
+							followArray[RHS[j]-101][RHS[k]] = 1;
 							break;
 						}
 						else
 						{
 							int r = 0;
 							for(r=1;r<57;r++){
-								if (followarr[RHS[j]-101].array[r] != 1)
+								if (followArray[RHS[j]-101][r] != 1)
 								{
-									followarr[RHS[j]-101].array[r] = firstarr[RHS[k]-101].array[r];
+									followArray[RHS[j]-101][r] = firstArray[RHS[k]-101][r];
 								}
-								// followarr[RHS[j]-101].array[r] = firstarr[RHS[k]-101].array[r];
+								// followarr[RHS[j]-101].array[r] = firstArray[RHS[k]-101][r];
 							}
-							if ( firstarr[RHS[k]-101].array[0] == 1 )
+							if ( firstArray[RHS[k]-101][0] == 1 )
 							{
 								zupata = 1;
 								continue;
@@ -214,11 +203,11 @@ void calculatefollow(char * filename){
 					{
 						int w = 0;
 						for(w=0;w<58;w++){
-							if (followarr[RHS[j]-101].array[w] != 1)
+							if (followArray[RHS[j]-101][w] != 1)
 							{
-								followarr[RHS[j]-101].array[w] = followarr[LHS-101].array[w];
+								followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 							}
-							// followarr[RHS[j]-101].array[w] = followarr[LHS-101].array[w];
+							// followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 						}
 					}
 				}
@@ -231,17 +220,18 @@ void calculatefollow(char * filename){
 			{
 				int w = 0;
 				for(w=0;w<58;w++){
-					if (followarr[RHS[j]-101].array[w] != 1)
+					if (followArray[RHS[j]-101][w] != 1)
 					{
-						followarr[RHS[j]-101].array[w] = followarr[LHS-101].array[w];
+						followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 					}
-					// followarr[RHS[j]-101].array[w] = followarr[LHS-101].array[w];
+					// followArray[RHS[j]-101][w] = followArray[LHS-101][w];
 				}
 			}
 			// printf("iteration num %d rule num %d %s \n", q, i, grammar[i]);
 			// printf("%s %d\n", idtotkstr(LHS),n);
 			
 		}
+		q++;
 	}
 	FILE * fp1 = fopen(filename,"w");
 	int j= 0;
@@ -249,7 +239,7 @@ void calculatefollow(char * filename){
 		fprintf(fp1,"%s ", idtotkstr(j+101));
 		int k = 0;
 		for(k=0;k<58;k++){
-			if (followarr[j].array[k] == 1)
+			if (followArray[j][k] == 1)
 			{
 				fprintf(fp1,"%s ", idtotkstr(k));
 			}
