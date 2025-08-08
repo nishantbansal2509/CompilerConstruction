@@ -1,48 +1,58 @@
 /*
-Batch No 11
-Nishant Bansal	2014A7PS052P
-Subham Kumar	2014A7PS121P
-*/
-
-//readSize is the default length of sourcecode read at a time to avoid IO intensity
-#define readSize 11
-//the code will malfunction if a lexeme's length is greater then this value
-#define maxTokenLength 33
-//maximum number of errors in the sourcecode compiler will report
-#define errSize 100
+ * Lexer Definitions Header
+ * 
+ * This file contains definitions for the lexical analyzer component
+ * of the compiler, including token structures and error handling.
+ *
+ * Original Authors:
+ * Batch No 11
+ * Nishant Bansal	2014A7PS052P
+ * Subham Kumar	2014A7PS121P
+ */
 
 #ifndef LEXERDEF_H_INCLUDED
-
 #define LEXERDEF_H_INCLUDED
 
 #include <stdlib.h>
 
-int currentLine;
+/* Configuration constants */
+// Default length of source code read at a time to reduce I/O operations
+#define READ_SIZE 11
+// Maximum length of a token lexeme - tokens longer than this will cause errors
+#define MAX_TOKEN_LENGTH 33
+// Maximum number of errors the compiler will report
+#define ERROR_SIZE 100
 
-int state;
+/* Token structure definition */
+typedef struct {
+    int tkId;                       // Token identifier
+    char tkName[13];                // Token name
+    char lexeme[MAX_TOKEN_LENGTH];  // Actual lexeme text
+    int lineNum;                    // Line number where token appears
+} TokenInfo;
 
-int rangeopFlag;
+/* Global variables - consider refactoring to reduce globals */
+// Current line being processed
+extern int currentLine;
+// Current state of the lexer state machine
+extern int state;
+// Flag for range operator detection
+extern int rangeopFlag;
+// Buffer for reading source code
+extern char readBuffer[READ_SIZE];
+// Current position in the read buffer
+extern int readBuffPointer;
 
-//readBuffer acts as temporary storage for the part of sourcecode read
-char readBuffer[readSize];
+/* Error tracking */
+// Current error count
+extern int errptr;
+// Error type codes
+extern int errno[ERROR_SIZE];
+// Line numbers where errors occurred
+extern int errline[ERROR_SIZE];
+// Error symbols for unknown character errors
+extern char errsym[ERROR_SIZE];
+// Error lexemes
+extern char errstr[ERROR_SIZE][MAX_TOKEN_LENGTH];
 
-int readBuffPointer;
-
-struct tokenInfo{
-	int tkId;
-	char tkName[13];
-	char lexeme[maxTokenLength];
-	int lineNum;
-};
-
-typedef struct tokenInfo tokenInfo;
-
-
-int errptr;								//for indexing in the following arrays
-int errno[errSize];						//stores the error number of the corresponding index
-int errline[errSize];					//stores the line number in which the error appears
-char errsym[errSize];					//stores the error symbol if the error is because of an unknown character
-char errstr[errSize][maxTokenLength];	//store the lexeme which has the error
-
-#endif
-
+#endif /* LEXERDEF_H_INCLUDED */

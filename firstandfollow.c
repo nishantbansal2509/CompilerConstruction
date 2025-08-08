@@ -10,21 +10,21 @@ Subham Kumar	2014A7PS121P
 #include "parserDef.h"
 #include "utility.h"
 
-//'rows' rows corresponding to all non terminals in the grammar
-//'columns' columns corresponding to all terminals in the grammar except $
-int firstArray[rows][columns];
+//'ROWS' ROWS corresponding to all non terminals in the grammar
+//'COLUMNS' COLUMNS corresponding to all terminals in the grammar except $
+int firstArray[ROWS][COLUMNS];
 
-//'rows' rows corresponding to all non terminal in the grammar
-//columns+1 columns corresponding to all terminals in the grammar
-int followArray[rows][columns+1];
+//'ROWS' ROWS corresponding to all non terminal in the grammar
+//COLUMNS+1 COLUMNS corresponding to all terminals in the grammar
+int followArray[ROWS][COLUMNS+1];
 
 //calculateFirst takes input the file name uses the grammar defined in parser.c
 //to create first dets in the file passed to it
 void calculateFirst(char * filename){
 	int p = 0;
-	for(p=0;p<rows;p++){
+	for(p=0;p<ROWS;p++){
 		int j = 0;
-		for(j=0;j<columns;j++){
+		for(j=0;j<COLUMNS;j++){
 			firstArray[p][j] = -1;
 		}
 	}
@@ -36,7 +36,7 @@ void calculateFirst(char * filename){
 		int i = 0;
 		for(i=0;i<94;i++){
 			char tempbuffer[90];
-			memset(tempbuffer, 90, '\0');
+			memset(tempbuffer, .\0., 90);
 			strcpy(tempbuffer,grammar[i]);
 			char * pch;
 			pch = strtok(tempbuffer," ");
@@ -81,7 +81,7 @@ void calculateFirst(char * filename){
 						flag = 0;
 					}
 					int l = 1;
-					for(l=1;l<columns;l++){
+					for(l=1;l<COLUMNS;l++){
 						if (firstArray[RHS[k]-101][l] == 1)
 						{
 							if (firstArray[LHS-101][l] != 1)
@@ -114,10 +114,10 @@ void calculateFirst(char * filename){
 	}
 	FILE * fp = fopen(filename,"w");
 	int j;
-	for(j=0;j<rows;j++){
+	for(j=0;j<ROWS;j++){
 		fprintf(fp,"%s ", idtotkstr(j+101));
 		int k = 0;
-		for(k=0;k<columns;k++){
+		for(k=0;k<COLUMNS;k++){
 			if (firstArray[j][k] == 1)
 			{
 				fprintf(fp,"%s ", idtotkstr(k));
@@ -132,9 +132,9 @@ void calculateFirst(char * filename){
 //to crate the follow sets in the file
 void calculatefollow(char * filename){
 	int i;
-	for(i=0;i<rows;i++){
+	for(i=0;i<ROWS;i++){
 		int j = 0;
-		for(j=0;j<columns+1;j++){
+		for(j=0;j<COLUMNS+1;j++){
 			followArray[i][j] = -1;
 		}
 	}
@@ -148,7 +148,7 @@ void calculatefollow(char * filename){
 		int i = 0;
 		for(i=0;i<94;i++){
 			char tempbuffer[90];
-			memset(tempbuffer, 90, '\0');
+			memset(tempbuffer, .\0., 90);
 			strcpy(tempbuffer,grammar[i]);
 			char * pch;
 			pch = strtok(tempbuffer," ");
@@ -171,7 +171,7 @@ void calculatefollow(char * filename){
 				{
 					int zupata = 0;
 					int k = j+1;
-					for(k;k<n;k++){
+					for(; k<n; k++){
 						if (RHS[k] < 100 && RHS[k] > 0)
 						{
 							if (followArray[RHS[j]-101][RHS[k]] != 1)
@@ -184,7 +184,7 @@ void calculatefollow(char * filename){
 						else
 						{
 							int r = 0;
-							for(r=1;r<columns;r++){
+							for(r=1;r<COLUMNS;r++){
 								if (followArray[RHS[j]-101][r] != 1)
 								{
 									if (firstArray[RHS[k]-101][r] == 1)
@@ -208,7 +208,7 @@ void calculatefollow(char * filename){
 					if (k == n && zupata == 1 && RHS[n-1] > 100)
 					{
 						int w = 0;
-						for(w=0;w<columns+1;w++){
+						for(w=0;w<COLUMNS+1;w++){
 							if (followArray[RHS[j]-101][w] != 1)
 							{
 								if (followArray[LHS-101][w] == 1)
@@ -228,7 +228,7 @@ void calculatefollow(char * filename){
 			else
 			{
 				int w = 0;
-				for(w=0;w<columns+1;w++){
+				for(w=0;w<COLUMNS+1;w++){
 					if (followArray[RHS[j]-101][w] != 1)
 					{
 						if (followArray[LHS-101][w] == 1)
@@ -243,10 +243,10 @@ void calculatefollow(char * filename){
 	}
 	FILE * fp1 = fopen(filename,"w");
 	int j= 0;
-	for(j=0;j<rows;j++){
+	for(j=0;j<ROWS;j++){
 		fprintf(fp1,"%s ", idtotkstr(j+101));
 		int k = 0;
-		for(k=0;k<columns+1;k++){
+		for(k=0;k<COLUMNS+1;k++){
 			if (followArray[j][k] == 1)
 			{
 				fprintf(fp1,"%s ", idtotkstr(k));

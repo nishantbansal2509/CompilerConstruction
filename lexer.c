@@ -12,18 +12,18 @@ Subham Kumar	2014A7PS121P
 
 
 //getStream takes the file pointer and populates the global
-//readBuffer which contains readSize number of charaacters
+//readBuffer which contains READ_SIZE number of charaacters
 //at a time and returns the same file pointer which has now 
 //advanced by the number of characters read
 FILE * getStream (FILE * fp){
 	int charRead;
 	int i;
-	for(i=0;i<readSize;i++){
+	for(i=0;i<READ_SIZE;i++){
 		readBuffer[i] = '\0';
 		//padding the readBuffer
 	}
 	if(feof(fp)==0 && ferror(fp)==0){
-		charRead = fread(readBuffer, sizeof(char), readSize-1, fp);
+		charRead = fread(readBuffer, sizeof(char), READ_SIZE-1, fp);
 		// printf("%d\n", charRead);
 	}
 	readBuffer[charRead] = '$';
@@ -34,7 +34,7 @@ FILE * getStream (FILE * fp){
 //remove comments and generate the clean code in cleanFile.txt
 //which will be used for all later stages of compiler
 //needs changes
-void removeComments(char * testCaseFile, char * cleanFile){
+void removeComments(const char* testCaseFile, const char* cleanFile){
 	FILE * fd1 = fopen(testCaseFile,"r");
 	FILE * fd2 = fopen(cleanFile,"w");
 	int c;
@@ -88,7 +88,7 @@ void removeComments(char * testCaseFile, char * cleanFile){
 //if increasing it will result in buffer overflow then it calls
 //getStream method to get the next stream of characters in the buffer
 int incrementReadBuffPointer(int readBuffPointer, FILE * fp){
-	if (readBuffPointer < readSize-2)
+	if (readBuffPointer < READ_SIZE-2)
 	{
 		readBuffPointer++;
 		return readBuffPointer;
@@ -108,13 +108,13 @@ int incrementReadBuffPointer(int readBuffPointer, FILE * fp){
 //1. if identifier length is longer than the prescribed limit
 //2. unknown symbol is found in the source code
 //3. unknown pattern found in the code
-tokenInfo getNextToken(FILE * fp){
+TokenInfo getNextToken(FILE * fp){
 	state = 1;		//initialize to state 1 of DFA
 	//localBuffer remembers the lexeme while readBufferPointer incrrements for lookahead
-	char localBuffer[maxTokenLength];
+	char localBuffer[MAX_TOKEN_LENGTH];
 	int localBuffPointer = 0;
-	memset(localBuffer,'\0',maxTokenLength);
-	tokenInfo tk;
+	memset(localBuffer,'\0',MAX_TOKEN_LENGTH);
+	TokenInfo tk;
 	while(1){
 		char c = readBuffer[readBuffPointer];
 		// printf("%c state %d\n", c, state);
@@ -552,7 +552,7 @@ tokenInfo getNextToken(FILE * fp){
 						tk.tkId = 21;
 						strcpy(tk.tkName, "NUM");
 						int i = 0;
-						memset(tk.lexeme,'\0',maxTokenLength);
+						memset(tk.lexeme,'\0',MAX_TOKEN_LENGTH);
 						for(i=0;i<localBuffPointer;i++){
 							tk.lexeme[i] = localBuffer[i];
 						}
@@ -567,7 +567,7 @@ tokenInfo getNextToken(FILE * fp){
 						tk.tkId = 21;
 						strcpy(tk.tkName, "NUM");
 						int i = 0;
-						memset(tk.lexeme,'\0',maxTokenLength);
+						memset(tk.lexeme,'\0',MAX_TOKEN_LENGTH);
 						for(i=0;i<localBuffPointer-1;i++){
 							tk.lexeme[i] = localBuffer[i];
 						}
@@ -617,7 +617,7 @@ tokenInfo getNextToken(FILE * fp){
 						tk.tkId = 23;
 						strcpy(tk.tkName, "RNUM");
 						int i = 0;
-						memset(tk.lexeme,'\0',maxTokenLength);
+						memset(tk.lexeme,'\0',MAX_TOKEN_LENGTH);
 						for(i=0;i<localBuffPointer;i++){
 							tk.lexeme[i] = localBuffer[i];
 						}
@@ -688,7 +688,7 @@ tokenInfo getNextToken(FILE * fp){
 						tk.tkId = 23;
 						strcpy(tk.tkName, "RNUM");
 						int i = 0;
-						memset(tk.lexeme,'\0',maxTokenLength);
+						memset(tk.lexeme,'\0',MAX_TOKEN_LENGTH);
 						for(i=0;i<localBuffPointer;i++){
 							tk.lexeme[i] = localBuffer[i];
 						}
@@ -767,8 +767,8 @@ tokenInfo getNextToken(FILE * fp){
 						break;
 					default:
 						state = 1;
-						char string[maxTokenLength];
-						memset(string, '\0', maxTokenLength);
+						char string[MAX_TOKEN_LENGTH];
+						memset(string, '\0', MAX_TOKEN_LENGTH);
 						int i;
 						for(i=0;i<localBuffPointer;i++){
 							string[i] = localBuffer[i];
