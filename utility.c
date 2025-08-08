@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "utility.h"
 
-int getTokenId(char * s){
+int getTokenId(const char* s){
 	if(!strcmp(s,"EMPTY")) return 0;
 	if(!strcmp(s,"PLUS")) return 1;
 	if(!strcmp(s,"MINUS")) return 2;
@@ -227,7 +227,8 @@ void idtotk(int n){
 	if(n==151) printf("whichStmt");
 }
 
-char * idtotkstr(int n){
+char* idtotkstr(int n){
+    static char tokenName[20];
 	if(n==0  ) return("EMPTY");
 	if(n==1  ) return("PLUS");
 	if(n==2  ) return("MINUS");
@@ -337,4 +338,8 @@ char * idtotkstr(int n){
 	if(n==149) return("var");
 	if(n==150) return("whichId");
 	if(n==151) return("whichStmt");
+	
+	// Default case
+	strcpy(tokenName, "UNKNOWN");
+	return tokenName;
 }

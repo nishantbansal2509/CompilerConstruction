@@ -12,7 +12,7 @@ Subham Kumar	2014A7PS121P
 #include "utility.h"
 #include "parser.h"
 
-char grammar[noofrules][90] = {
+char grammar[NUM_RULES][90] = {
 	"program moduleDeclarations otherModules driverModule otherModules",
 	"moduleDeclarations moduleDeclaration moduleDeclarations",
 	"moduleDeclarations EMPTY",
@@ -142,16 +142,16 @@ int readline(FILE *f, char *buffer, size_t len){
    return -1; 
 }
 
-void populateFirst(char * file){
+void populateFirst(const char* file){
 	int l,m;
-	for(l=0;l<rows;l++){
-		for(m=0;m<fnflen;m++){
+	for(l=0;l<ROWS;l++){
+		for(m=0;m<FNF_LEN;m++){
 			first[l][m] = -1;
 		}
 	}
 	FILE * fd = fopen(file,"r");
 	int i;
-	for(i=0;i<rows;i++)
+	for(i=0;i<ROWS;i++)
 	{
 		char tbuff[100];
 		readline(fd, tbuff, 100);
@@ -171,16 +171,16 @@ void populateFirst(char * file){
 	fclose(fd);
 }
 
-void populateFollow(char * file){
+void populateFollow(const char* file){
 	int l,m;
-	for(l=0;l<rows;l++){
-		for(m=0;m<fnflen;m++){
+	for(l=0;l<ROWS;l++){
+		for(m=0;m<FNF_LEN;m++){
 			follow[l][m] = -1;
 		}
 	}
 	FILE * fd = fopen(file,"r");
 	int i;
-	for(i=0;i<rows;i++)
+	for(i=0;i<ROWS;i++)
 	{
 		char tbuff[100];
 		readline(fd, tbuff, 100);
@@ -222,13 +222,13 @@ void createParseTable(){
 			pch = strtok(NULL," ");
 			n++;
 		}
-		//int rhsFirst[columns] = {0};
+		//int rhsFirst[COLUMNS] = {0};
 		int i;
 		// printf("%d %d\n", n,RHS[0]);
 		if (n==1 && RHS[0] == 0)
 		{
 			int k;
-			for(k=0;k<fnflen;k++){
+			for(k=0;k<FNF_LEN;k++){
 				// printf("%d\n", follow[rowNum][k]);
 				int c = follow[rowNum][k];
 				if (c == -1)
@@ -254,7 +254,7 @@ void createParseTable(){
 			{
 				int flag = 0;
 				int k = 0;
-				for(k=0;k<fnflen;k++){
+				for(k=0;k<FNF_LEN;k++){
 					if (first[RHS[i]-101][k] == -1)
 					{
 						break;
@@ -285,7 +285,7 @@ void createParseTable(){
 }
 
 void print(){
-	struct Node * temp = head;
+	StackNode * temp = head;
 	while(temp != NULL){
 		idtotk(temp->data);
 		printf(" -> ");
@@ -295,8 +295,8 @@ void print(){
 }
 
 void push(int Tkid){
-	struct Node * newNode;
-    newNode = (struct Node*) malloc (sizeof(struct Node));
+	StackNode * newNode;
+    newNode = (StackNode*) malloc (sizeof(StackNode));
     newNode->data = Tkid;
     if(head == NULL)
       newNode->next = NULL;
@@ -311,13 +311,13 @@ void pop(){
 	}
     else
 	{
-		struct Node *temp = head;
+		StackNode *temp = head;
 		head = temp->next;
 		free(temp);
 	}
 }
 
-void parseInputSourceCode(char * file){
+void parseInputSourceCode(const char* file){
 	state = 1;
 
 	FILE * fd = fopen(file,"r");
@@ -328,15 +328,15 @@ void parseInputSourceCode(char * file){
 	// 	tokenInfo tk = getNextToken(fd);
 	// 	printf("%s %s %d\n", tk.tkName, tk.lexeme, tk.lineNum);
 	// }
-	T = (struct treenode *) malloc (sizeof(struct treenode));
+	T = (TreeNode *) malloc (sizeof(TreeNode));
 	T->id = 139;
 	T->parent = NULL;
 	T->child = NULL;
 	T->sibling = NULL;
 	strcpy(T->lexeme,"----");
 
-	struct treenode * currentNode = T;
-	struct treenode * endmarker = (struct treenode *) malloc (sizeof(struct treenode));
+	TreeNode * currentNode = T;
+	TreeNode * endmarker = (TreeNode *) malloc (sizeof(TreeNode));
 	endmarker->id = 200;
 	endmarker->parent = NULL;
 	endmarker->child = NULL;
@@ -346,7 +346,7 @@ void parseInputSourceCode(char * file){
 
 	push(57);
 	push(139);
-	tokenInfo token;
+	TokenInfo token;
 	token = getNextToken(fd);
 	// printf("%s\n", token.lexeme);
 	// int x = 0;
@@ -452,7 +452,7 @@ void parseInputSourceCode(char * file){
 			int j = 0;
 			if (RHS[j] == 0)
 			{
-				struct treenode * temp = (struct treenode *) malloc (sizeof(struct treenode));
+				TreeNode * temp = (TreeNode *) malloc (sizeof(TreeNode));
 				currentNode->child = temp;
 				temp->id = 0;
 				temp->parent = currentNode;
@@ -466,7 +466,7 @@ void parseInputSourceCode(char * file){
 				currentNode = currentNode->sibling;
 				continue;
 			}
-			struct treenode * temp = (struct treenode *) malloc (sizeof(struct treenode));
+			TreeNode * temp = (TreeNode *) malloc (sizeof(TreeNode));
 			currentNode->child = temp;
 			temp->id = RHS[j];
 			temp->parent = currentNode;
@@ -475,10 +475,10 @@ void parseInputSourceCode(char * file){
 			temp->linenum = token.lineNum;
 			strcpy(temp->lexeme,"----");
 			
-			struct treenode * ptr = currentNode->child;
-			// struct treenode * temp = (struct treenode *) malloc (sizeof(struct treenode));
+			TreeNode * ptr = currentNode->child;
+			// TreeNode * temp = (TreeNode *) malloc (sizeof(TreeNode));
 			for(j=1;j<n;j++){
-				struct treenode * temp = (struct treenode *) malloc (sizeof(struct treenode));
+				TreeNode * temp = (TreeNode *) malloc (sizeof(TreeNode));
 				temp->id = RHS[j];
 				ptr->sibling = temp;
 				temp->parent = currentNode;
@@ -519,7 +519,7 @@ void parseInputSourceCode(char * file){
 		{
 			printf("ERROR_5: The token %s for %s does not match at line %d. The expected token here is ", idtotkstr(perrtk[i]), perrlex[i], perrline[i]);
 			int j = 0;
-			for(j=0;j<columns;j++){
+			for(j=0;j<COLUMNS;j++){
 				if (parseTable[perrex[i]-101][j] == 0)
 				{
 					continue;
@@ -534,7 +534,7 @@ void parseInputSourceCode(char * file){
 	}
 }
 
-void inorderT(struct treenode * curr, FILE * fd){
+void inorderT(TreeNode * curr, FILE * fd){
 	if (curr == NULL)
 	{
 		return;
@@ -596,7 +596,7 @@ void inorderT(struct treenode * curr, FILE * fd){
 		// printf("%s\n", );
 	// }
 	fprintf(fd,"\n");
-	struct treenode * temp = curr->child;
+	TreeNode * temp = curr->child;
 	if (temp == NULL)
 	{
 		return;

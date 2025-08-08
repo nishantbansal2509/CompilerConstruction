@@ -1,149 +1,89 @@
 /*
-Batch No 11
-Nishant Bansal	2014A7PS052P
-Subham Kumar	2014A7PS121P
-*/
+ * Parser Definitions Header
+ *
+ * This file contains definitions for the parser component of the compiler,
+ * including parse table structures, tree nodes, and grammar rules.
+ *
+ * Original Authors:
+ * Batch No 11
+ * Nishant Bansal	2014A7PS052P
+ * Subham Kumar	2014A7PS121P
+ */
 
 #ifndef PARSERDEF_H_INCLUDED
 #define PARSERDEF_H_INCLUDED
 
 #include <stdio.h>
 
-#define rows 51
-#define columns 57
-#define fnflen 20
-#define noofrules 94
+/* Configuration constants */
+// Number of non-terminals in the grammar
+#define ROWS 51
+// Number of terminals in the grammar (excluding EOF)
+#define COLUMNS 57
+// Maximum length of FIRST/FOLLOW sets
+#define FNF_LEN 20
+// Number of grammar rules
+#define NUM_RULES 94
+// Maximum error count
+#define MAX_PARSER_ERRORS 100
+// Maximum lexeme length
+#define MAX_LEXEME_LENGTH 33
 
-int first[rows][fnflen];
+/* Parse table and sets */
+// FIRST sets for all non-terminals
+extern int first[ROWS][FNF_LEN];
+// FOLLOW sets for all non-terminals
+extern int follow[ROWS][FNF_LEN];
+// LL(1) parse table
+extern int parseTable[ROWS][COLUMNS];
 
-int follow[rows][fnflen];
+/**
+ * Parse tree node structure
+ */
+typedef struct TreeNode {
+    int id;                      // Node identifier
+    struct TreeNode* parent;     // Parent node
+    struct TreeNode* child;      // First child node
+    struct TreeNode* sibling;    // Next sibling node
+    char lexeme[MAX_LEXEME_LENGTH]; // Lexeme text
+    int linenum;                 // Line number
+} TreeNode;
 
-int parseTable[rows][columns];
+/* Error tracking for parser */
+// Current parser error count
+extern int perrptr;
+// Line numbers where parser errors occurred
+extern int perrline[MAX_PARSER_ERRORS];
+// Expected tokens at error points
+extern int perrtk[MAX_PARSER_ERRORS];
+// Actual tokens at error points
+extern int perrex[MAX_PARSER_ERRORS];
+// Lexemes at error points
+extern char perrlex[MAX_PARSER_ERRORS][30];
 
-struct treenode{
-	int id;
-	struct treenode * parent;
-	struct treenode * child;
-	struct treenode * sibling;
-	char lexeme[33];
-	int linenum;
-};
+/* Global parse tree root */
+extern TreeNode* T;
 
-int perrptr;
-int perrline[100];
-int perrtk[100];
-int perrex[100];
-char perrlex[100][30];
+/* Flag for syntax correctness */
+extern int syntaxFlag;
 
-struct treenode * T;
+/**
+ * Stack node structure for parser stack
+ */
+typedef struct StackNode {
+    int data;                // Node data (token/non-terminal ID)
+    struct StackNode* next;  // Next node in stack
+} StackNode;
 
-int syntaxFlag;
+/* Stack head pointer */
+extern StackNode* head;
 
-struct Node
-{
-   int data;
-   struct Node *next;
-};
+/* Grammar rules */
+extern char grammar[NUM_RULES][90];
 
-struct Node * head;
+#endif /* PARSERDEF_H_INCLUDED */
 
-extern char grammar[noofrules][90];
-
-#endif
-
-// char grammar[noofrules][90] = {
-// "program moduleDeclarations otherModules driverModule otherModules",
-// "moduleDeclarations moduleDeclaration moduleDeclarations",
-// "moduleDeclarations EMPTY",
-// "moduleDeclaration DECLARE MODULE ID SEMICOL",
-// "otherModules module otherModules",
-// "otherModules EMPTY",
-// "driverModule DRIVERDEF DRIVER PROGRAM DRIVERENDDEF moduleDef",
-// "module DEF MODULE ID ENDDEF TAKES INPUT SQBO input_plist SQBC SEMICOL ret moduleDef",
-// "ret RETURNS SQBO output_plist SQBC SEMICOL",
-// "ret EMPTY",
-// "input_plist ID COLON dataType N1",
-// "N1 COMMA ID COLON dataType N1",
-// "N1 EMPTY",
-// "output_plist ID COLON type N2",
-// "N2 COMMA ID COLON type N2",
-// "N2 EMPTY",
-// "dataType INTEGER",
-// "dataType REAL",
-// "dataType BOOLEAN",
-// "dataType ARRAY SQBO range SQBC OF type",
-// "type INTEGER",
-// "type REAL",
-// "type BOOLEAN",
-// "moduleDef START statements END",
-// "statements statement statements",
-// "statements EMPTY",
-// "statement ioStmt",
-// "statement simpleStmt",
-// "statement declareStmt",
-// "statement conditionalStmt",
-// "statement iterativeStmt",
-// "ioStmt GET_VALUE BO ID BC SEMICOL",
-// "ioStmt PRINT BO var BC SEMICOL",
-// "var ID whichId",
-// "var NUM",
-// "var RNUM",
-// "whichId SQBO ID SQBC",
-// "whichId EMPTY",
-// "simpleStmt assignmentStmt",
-// "simpleStmt moduleReuseStmt",
-// "assignmentStmt ID whichStmt",
-// "whichStmt lvalueIDStmt",
-// "whichStmt lvalueARRStmt",
-// "lvalueIDStmt ASSIGNOP expression SEMICOL",
-// "lvalueARRStmt SQBO index SQBC ASSIGNOP expression SEMICOL",
-// "index NUM",
-// "index ID",
-// "moduleReuseStmt optional USE MODULE ID WITH PARAMETERS idList SEMICOL",
-// "optional SQBO idList SQBC ASSIGNOP",
-// "optional EMPTY",
-// "idList ID N3",
-// "N3 COMMA ID N3",
-// "N3 EMPTY",
-// "expression arithmeticOrBooleanExpr",
-// "expression MINUS BO arithmeticExpr BC",
-// "arithmeticOrBooleanExpr AnyTerm N7",
-// "N7 logicalOp AnyTerm N7",
-// "N7 EMPTY",
-// "AnyTerm arithmeticExpr N8",
-// "N8 relationalOp arithmeticExpr N8",
-// "N8 EMPTY",
-// "arithmeticOrBooleanExpr BO arithmeticOrBooleanExpr BC",
-// "arithmeticExpr term N4",
-// "N4 op1 term N4",
-// "N4 EMPTY",
-// "term factor N5",
-// "N5 op2 factor N5",
-// "N5 EMPTY",
-// "factor var",
-// "op1 PLUS",
-// "op1 MINUS",
-// "op2 MUL",
-// "op2 DIV",
-// "logicalOp AND",
-// "logicalOp OR",
-// "relationalOp LT",
-// "relationalOp LE",
-// "relationalOp GT",
-// "relationalOp GE",
-// "relationalOp EQ",
-// "relationalOp NE",
-// "declareStmt DECLARE idList COLON dataType SEMICOL",
-// "conditionalStmt SWITCH BO ID BC START caseStmts default END",
-// "caseStmts CASE value COLON statements BREAK SEMICOL N9",
-// "N9 CASE value COLON statements BREAK SEMICOL N9",
-// "N9 EMPTY",
-// "value NUM ",
-// "value TRUE",
-// "value FALSE",
-// "default DEFAULT COLON statements BREAK SEMICOL ",
-// "default EMPTY",
-// "iterativeStmt FOR BO ID IN range BC START statements END",
-// "iterativeStmt WHILE BO arithmeticOrBooleanExpr BC START statements END",
-// "range NUM RANGEOP NUM"
-// };
+/*
+ * Grammar rules (commented out to avoid duplication)
+ * These are now defined in parser.c
+ */
